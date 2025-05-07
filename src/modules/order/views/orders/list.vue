@@ -3,8 +3,8 @@
 		<cl-row>
 			<cl-refresh-btn />
 			<cl-multi-delete-btn />
-			<cl-btn type="primary" @click="handleExport">导出</cl-btn>
-			<cl-btn type="success" @click="handleImport">导入</cl-btn>
+			<el-button type="primary" @click="handleExport">导出</el-button>
+			<el-button type="success" @click="handleImport">导入</el-button>
 			<cl-flex1 />
 			<cl-search-key placeholder="搜索主订单号、子订单号、收件人" />
 		</cl-row>
