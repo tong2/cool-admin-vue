@@ -6,7 +6,7 @@
 			<el-button type="primary" @click="handleExport">导出</el-button>
 			<el-button type="success" @click="handleImport">导入</el-button>
 			<cl-flex1 />
-			<cl-search-key placeholder="搜索主订单号、子订单号、收件人" />
+			<cl-search-key placeholder="搜索子订单号" />
 		</cl-row>
 
 		<cl-row>
@@ -114,7 +114,7 @@ const Table = useTable({
 		{ label: '预约送达时间', prop: 'scheduled_delivery_arrival_time', minWidth: 170 },
 		{ label: '建议发货时间（起）', prop: 'suggested_delivery_start_time', minWidth: 170 },
 		{ label: '建议发货时间（止）', prop: 'suggested_delivery_end_time', minWidth: 170 },
-		{ label: '操作', type: 'op', buttons: ['edit', 'delete'], minWidth: 120 }
+		{ label: '操作', type: 'op', buttons: ['delete'], minWidth: 120 }
 	]
 });
 

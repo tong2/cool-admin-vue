@@ -6,7 +6,7 @@
 			<el-button type="primary" @click="handleExport">导出</el-button>
 			<el-button type="success" @click="handleImport">导入</el-button>
 			<cl-flex1 />
-			<cl-search-key placeholder="搜索订单编号、店铺、收件人" />
+			<cl-search-key placeholder="搜索订单编号" />
 		</cl-row>
 
 		<cl-row>
@@ -77,7 +77,7 @@ const Table = useTable({
 		{ label: '规格名称', prop: 'specification_name', minWidth: 120 },
 		{ label: '下单数量', prop: 'order_quantity', minWidth: 100 },
 		{ label: '成交价', prop: 'transaction_price', minWidth: 100 },
-		{ label: '操作', type: 'op', buttons: ['edit', 'delete'], minWidth: 120 }
+		{ label: '操作', type: 'op', buttons: ['delete'], minWidth: 120 }
 	]
 });
 

@@ -6,7 +6,7 @@
 			<el-button type="primary" @click="handleExport">导出</el-button>
 			<el-button type="success" @click="handleImport">导入</el-button>
 			<cl-flex1 />
-			<cl-search-key placeholder="搜索商品编码、品牌方、供货方" />
+			<cl-search-key placeholder="搜索商品编码" />
 		</cl-row>
 
 		<cl-row>
@@ -59,7 +59,7 @@ const Table = useTable({
 		{ label: '费用4', prop: 'fee4', minWidth: 100 },
 		{ label: '费用5', prop: 'fee5', minWidth: 100 },
 		{ label: '返利', prop: 'rebate', minWidth: 100 },
-		{ label: '操作', type: 'op', buttons: ['edit', 'delete'], minWidth: 120 }
+		{ label: '操作', type: 'op', buttons: ['delete'], minWidth: 120 }
 	]
 });
 

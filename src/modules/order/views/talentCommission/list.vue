@@ -6,7 +6,7 @@
 			<el-button type="primary" @click="handleExport">导出</el-button>
 			<el-button type="success" @click="handleImport">导入</el-button>
 			<cl-flex1 />
-			<cl-search-key placeholder="搜索订单ID、商品名称、店铺名称" />
+			<cl-search-key placeholder="搜索订单ID" />
 		</cl-row>
 
 		<cl-row>
@@ -89,7 +89,7 @@ const Table = useTable({
 		{ label: '流量细分来源', prop: 'traffic_segment_source', minWidth: 120 },
 		{ label: '流量来源', prop: 'traffic_source', minWidth: 120 },
 		{ label: '订单类型', prop: 'order_type', minWidth: 120 },
-		{ label: '操作', type: 'op', buttons: ['edit', 'delete'], minWidth: 120 }
+		{ label: '操作', type: 'op', buttons: ['delete'], minWidth: 120 }
 	]
 });
 
