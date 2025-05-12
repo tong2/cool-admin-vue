@@ -327,7 +327,7 @@ const Upsert = useUpsert({
 
 // 动态路由前缀
 const getDynamicPrefix = () => {
-	return import.meta.env.MODE === 'development' ? '/dev' : '/prod';
+	return import.meta.env.MODE === 'development' ? '/dev' : '/api';
 };
 
 // Import dialog state

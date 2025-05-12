@@ -263,7 +263,7 @@ const Upsert = useUpsert({
 });
 
 const getDynamicPrefix = () => {
-	return import.meta.env.MODE === 'development' ? '/dev' : '/prod';
+	return import.meta.env.MODE === 'development' ? '/dev' : '/api';
 };
 
 const importDialogVisible = ref(false);
