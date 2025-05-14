@@ -89,6 +89,7 @@ const Table = useTable({
 		{ label: '流量细分来源', prop: 'traffic_segment_source', minWidth: 120 },
 		{ label: '流量来源', prop: 'traffic_source', minWidth: 120 },
 		{ label: '订单类型', prop: 'order_type', minWidth: 120 },
+		{ label: '生效时间', prop: 'effect_time', minWidth: 170 },
 		{ label: '操作', type: 'op', buttons: ['delete'], minWidth: 120 }
 	]
 });
