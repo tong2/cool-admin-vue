@@ -114,6 +114,14 @@ const Table = useTable({
 		{ label: '预约送达时间', prop: 'scheduled_delivery_arrival_time', minWidth: 170 },
 		{ label: '建议发货时间（起）', prop: 'suggested_delivery_start_time', minWidth: 170 },
 		{ label: '建议发货时间（止）', prop: 'suggested_delivery_end_time', minWidth: 170 },
+		{ label: '商品69码', prop: 'product69_code', minWidth: 120 },
+		{ label: '发货SN码', prop: 'shipping_sn_code', minWidth: 120 },
+		{ label: '发货IMEI码1', prop: 'shipping_imei_code1', minWidth: 120 },
+		{ label: '发货IMEI码2', prop: 'shipping_imei_code2', minWidth: 120 },
+		{ label: '物流SN码', prop: 'logistics_sn_code', minWidth: 120 },
+		{ label: '物流IMEI码1', prop: 'logistics_imei_code1', minWidth: 120 },
+		{ label: '物流IMEI码2', prop: 'logistics_imei_code2', minWidth: 120 },
+		{ label: '数据时间', prop: 'data_time', minWidth: 120 },
 		{ label: '操作', type: 'op', buttons: ['delete'], minWidth: 120 }
 	]
 });
