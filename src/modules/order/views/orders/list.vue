@@ -49,6 +49,7 @@ const Table = useTable({
 	columns: [
 		{ type: 'selection', width: 60 },
 		{ label: 'ID', prop: 'id', minWidth: 80 },
+		{ label: '数据时间', prop: 'data_time', minWidth: 120 },
 		{ label: '主订单号', prop: 'main_order_number', minWidth: 150 },
 		{ label: '子订单号', prop: 'sub_order_number', minWidth: 150 },
 		{ label: '选购商品', prop: 'selected_goods', minWidth: 200 },
@@ -121,7 +122,6 @@ const Table = useTable({
 		{ label: '物流SN码', prop: 'logistics_sn_code', minWidth: 120 },
 		{ label: '物流IMEI码1', prop: 'logistics_imei_code1', minWidth: 120 },
 		{ label: '物流IMEI码2', prop: 'logistics_imei_code2', minWidth: 120 },
-		{ label: '数据时间', prop: 'data_time', minWidth: 120 },
 		{ label: '操作', type: 'op', buttons: ['delete'], minWidth: 120 }
 	]
 });

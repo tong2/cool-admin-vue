@@ -28,6 +28,7 @@ const Table = useTable({
 	columns: [
 		{ type: 'selection', width: 60 },
 		{ label: 'ID', prop: 'id', minWidth: 80 },
+		{ label: '数据时间', prop: 'data_time', minWidth: 170 },
 		{ label: '子订单编号', prop: 'subOrderNo', minWidth: 120 },
 		{ label: '状态', prop: 'status', minWidth: 100 },
 		{ label: '仓库', prop: 'warehouse', minWidth: 120 },

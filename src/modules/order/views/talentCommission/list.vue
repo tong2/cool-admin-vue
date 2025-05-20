@@ -44,6 +44,7 @@ const Table = useTable({
 	columns: [
 		{ type: 'selection', width: 60 },
 		{ label: 'ID', prop: 'id', minWidth: 80 },
+		{ label: '数据时间', prop: 'data_time', minWidth: 120 },
 		{ label: '订单ID', prop: 'order_id', minWidth: 150 },
 		{ label: '商品ID', prop: 'product_id', minWidth: 120 },
 		{ label: '商品名称', prop: 'product_name', minWidth: 150 },
