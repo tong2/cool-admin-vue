@@ -3,6 +3,7 @@
 		<cl-row>
 			<cl-refresh-btn />
 			<cl-multi-delete-btn />
+			<el-button type="primary" @click="dialogVisible = true">生成核算表</el-button>
 			<cl-flex1 />
 			<cl-search-key placeholder="搜索子订单编号或商品ID" />
 		</cl-row>
@@ -15,6 +16,27 @@
 			<cl-flex1 />
 			<cl-pagination />
 		</cl-row>
+
+		<!-- 生成核算表弹窗 -->
+		<el-dialog v-model="dialogVisible" title="生成核算表" width="400px">
+			<el-form :model="formData" label-width="100px">
+				<el-form-item label="数据日期">
+					<el-date-picker
+						v-model="formData.gen_data_time"
+						type="date"
+						placeholder="选择日期"
+						format="YYYY-MM-DD"
+						value-format="YYYY-MM-DD"
+						style="width: 100%"
+					/>
+				</el-form-item>
+			</el-form>
+
+			<template #footer>
+				<el-button @click="dialogVisible = false">取消</el-button>
+				<el-button type="primary" @click="handleGenerate">生成</el-button>
+			</template>
+		</el-dialog>
 	</cl-crud>
 </template>
 
@@ -23,6 +45,46 @@ import { useCrud, useTable } from '@cool-vue/crud';
 import { ref } from 'vue';
 import { ElMessage, ElLoading } from 'element-plus';
 import axios from 'axios';
+
+const dialogVisible = ref(false);
+const formData = ref<{ gen_data_time: string }>({
+	gen_data_time: ''
+});
+
+const handleGenerate = async () => {
+	if (!formData.value.gen_data_time) {
+		ElMessage.warning('请先选择数据日期');
+		return;
+	}
+
+	const formattedDate = `${formData.value.gen_data_time} 00:00:00`;
+
+	const loading = ElLoading.service({
+		lock: true,
+		text: '正在生成核算表...',
+		background: 'rgba(0, 0, 0, 0.7)'
+	});
+	try {
+		const res = await axios.post(`${getDynamicPrefix()}/order/finance/accounting/generate`, {
+			gen_data_time: formattedDate
+		});
+		loading.close();
+
+		if (res.data.code === 1000) {
+			ElMessage.success('核算表生成成功');
+			dialogVisible.value = false;
+			formData.value.gen_data_time = '';
+			Crud.value?.refresh();
+		} else {
+			ElMessage.error(`生成失败: ${res.data.message || '未知错误'}`);
+		}
+	} catch (error: any) {
+		loading.close();
+		ElMessage.error(
+			`生成失败: ${error?.response?.data?.message || error.message || '请求错误'}`
+		);
+	}
+};
 
 const Table = useTable({
 	columns: [
@@ -92,7 +154,8 @@ const fetchAccountingList = async (params: any) => {
 	}
 };
 
-const Crud = useCrud(
+const Crud = ref();
+useCrud(
 	{
 		service: {
 			page: fetchAccountingList,
@@ -119,6 +182,7 @@ const Crud = useCrud(
 		}
 	},
 	(app: any) => {
+		Crud.value = app;
 		app.refresh();
 	}
 );
