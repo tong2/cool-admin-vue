@@ -240,12 +240,33 @@ const handleDialogClose = () => {
 
 const handleGenerateSubmit = async () => {
 	if (!generateFormRef.value) return;
+
 	await generateFormRef.value.validate(async valid => {
 		if (valid) {
-			if (latestDataTime.value && generateForm.gen_data_time > latestDataTime.value) {
+			const genDataTimeRaw = (generateForm.gen_data_time || '').trim();
+			if (!genDataTimeRaw) {
+				ElMessage.error('数据日期不能为空');
+				return;
+			}
+
+			// 格式化为 yyyy-MM-dd 00:00:00
+			const formatDateToFullString = (dateStr: string) => {
+				const dateObj = new Date(dateStr);
+				if (isNaN(dateObj.getTime())) return ''; // 非法日期返回空字符串
+				const pad = (n: number) => (n < 10 ? '0' + n : n);
+				return `${dateObj.getFullYear()}-${pad(dateObj.getMonth() + 1)}-${pad(dateObj.getDate())} 00:00:00`;
+			};
+
+			const genDataTime = formatDateToFullString(genDataTimeRaw);
+			if (!genDataTime) {
+				ElMessage.error('日期格式错误');
+				return;
+			}
+
+			if (latestDataTime.value && genDataTime > latestDataTime.value) {
 				try {
 					await ElMessageBox.confirm(
-						`您选择的数据日期 ${generateForm.gen_data_time} 晚于最新数据日期 ${latestDataTime.value}，是否继续？`,
+						`您选择的数据日期 ${genDataTime} 晚于最新数据日期 ${latestDataTime.value}，是否继续？`,
 						'警告',
 						{
 							confirmButtonText: '继续',
@@ -254,38 +275,37 @@ const handleGenerateSubmit = async () => {
 						}
 					);
 				} catch {
-					return; // User cancelled
+					return;
 				}
 			}
+
 			const loading = ElLoading.service({
 				lock: true,
 				text: '正在生成完成表...',
 				background: 'rgba(0, 0, 0, 0.7)'
 			});
+
 			try {
 				const response = await axios.post(
 					`${getDynamicPrefix()}/order/finance/finish/generate`,
 					{
-						gen_data_time: generateForm.gen_data_time
+						gen_data_time: genDataTime
 					}
 				);
 				loading.close();
-				if (response.data && response.data.code === 1000) {
+				if (response.data?.code === 1000) {
 					ElMessage.success('生成完成表成功');
-					generateDialogVisible.value = false;
-					generateFormRef.value?.resetFields();
+					handleDialogClose();
 					Crud.value?.refresh();
 				} else {
-					ElMessage.error(`生成完成表失败: ${response.data?.message || '响应格式错误'}`);
+					ElMessage.error(`生成失败: ${response.data?.message || '响应格式错误'}`);
 				}
 			} catch (error: unknown) {
 				loading.close();
-				let message = '未知错误';
-				if (axios.isAxiosError(error)) {
-					message =
-						error.response?.data?.message || error.message || '网络错误或服务器无响应';
-				}
-				ElMessage.error(`生成完成表失败: ${message}`);
+				const message = axios.isAxiosError(error)
+					? error.response?.data?.message || error.message || '网络错误'
+					: '未知错误';
+				ElMessage.error(`生成失败: ${message}`);
 			}
 		}
 	});
