@@ -49,7 +49,7 @@ const Table = useTable({
 	columns: [
 		{ type: 'selection', width: 60 },
 		{ label: 'ID', prop: 'id', minWidth: 80 },
-		{ label: '数据时间', prop: 'data_time', minWidth: 120 },
+		{ label: '数据时间', prop: 'gen_data_time', minWidth: 120 },
 		{ label: '主订单号', prop: 'main_order_number', minWidth: 150 },
 		{ label: '子订单号', prop: 'sub_order_number', minWidth: 150 },
 		{ label: '选购商品', prop: 'selected_goods', minWidth: 200 },

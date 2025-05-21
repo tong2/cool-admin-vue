@@ -3,6 +3,7 @@
 		<cl-row>
 			<cl-refresh-btn />
 			<cl-multi-delete-btn />
+			<el-button type="primary" @click="openGenerateDialog">生成完成表</el-button>
 			<cl-flex1 />
 			<cl-search-key placeholder="搜索子订单编号或选购商品" />
 		</cl-row>
@@ -15,20 +16,51 @@
 			<cl-flex1 />
 			<cl-pagination />
 		</cl-row>
+
+		<!-- Generate Completion Table Dialog -->
+		<el-dialog
+			v-model="generateDialogVisible"
+			title="生成完成表"
+			width="500px"
+			:close-on-click-modal="false"
+			:before-close="handleDialogClose"
+		>
+			<el-form :model="generateForm" ref="generateFormRef" :rules="generateRules">
+				<el-form-item>
+					<el-text>达人佣金和团长服务费，非必填</el-text>
+				</el-form-item>
+				<el-form-item label="最新数据日期">
+					<el-text>{{ latestDataTime || '' }}</el-text>
+				</el-form-item>
+				<el-form-item label="数据日期" prop="gen_data_time">
+					<el-date-picker
+						v-model="generateForm.gen_data_time"
+						type="date"
+						placeholder="选择数据日期"
+						value-format="YYYY-MM-DD"
+					/>
+				</el-form-item>
+			</el-form>
+			<template #footer>
+				<el-button @click="handleDialogClose">取消</el-button>
+				<el-button type="primary" @click="handleGenerateSubmit">提交</el-button>
+			</template>
+		</el-dialog>
 	</cl-crud>
 </template>
 
 <script lang="ts" name="finance-finish" setup>
 import { useCrud, useTable } from '@cool-vue/crud';
-import { ref } from 'vue';
-import { ElMessage, ElLoading } from 'element-plus';
+import { ref, reactive, onMounted } from 'vue';
+import { ElMessage, ElLoading, ElMessageBox } from 'element-plus';
 import axios from 'axios';
+import type { FormInstance, FormRules } from 'element-plus';
 
 const Table = useTable({
 	columns: [
 		{ type: 'selection', width: 60 },
 		{ label: 'ID', prop: 'id', minWidth: 80 },
-		{ label: '数据时间', prop: 'data_time', minWidth: 170 },
+		{ label: '数据时间', prop: 'gen_data_time', minWidth: 170 },
 		{ label: '主订单编号', prop: 'main_order_number', minWidth: 120 },
 		{ label: '子订单编号', prop: 'sub_order_number', minWidth: 120 },
 		{ label: '选购商品', prop: 'selected_product', minWidth: 150 },
@@ -152,6 +184,117 @@ const fetchFinishList = async (params: any) => {
 	}
 };
 
+// Fetch latest data time from cost API
+const latestDataTime = ref<string | null>(null);
+const fetchLatestDataTime = async () => {
+	try {
+		const response = await axios.get(
+			`${getDynamicPrefix()}/order/finance/cost/latest-data-time`
+		);
+		if (
+			response.data &&
+			response.data.code === 1000 &&
+			response.data.data &&
+			response.data.data.code === 1000 &&
+			response.data.data.data
+		) {
+			latestDataTime.value = response.data.data.data; // Sets to "2025-05-19"
+		} else {
+			latestDataTime.value = null;
+		}
+	} catch (error: unknown) {
+		let message = '未知错误';
+		if (axios.isAxiosError(error)) {
+			message =
+				error.response?.data?.data?.message ||
+				error.response?.data?.message ||
+				error.message ||
+				'网络错误或服务器无响应';
+		}
+		ElMessage.error(`获取最新数据日期失败: ${message}`);
+		latestDataTime.value = null;
+	}
+};
+
+// Dialog and form handling
+const generateDialogVisible = ref(false);
+const generateFormRef = ref<FormInstance | null>(null);
+const generateForm = reactive({
+	gen_data_time: ''
+});
+const generateRules = reactive<FormRules>({
+	gen_data_time: [{ required: true, message: '请选择数据日期', trigger: 'change' }]
+});
+
+const openGenerateDialog = async () => {
+	await fetchLatestDataTime();
+	// generateForm.gen_data_time = latestDataTime.value || '';
+	generateDialogVisible.value = true;
+};
+
+const handleDialogClose = () => {
+	generateForm.gen_data_time = '';
+	generateDialogVisible.value = false;
+	generateFormRef.value?.resetFields();
+};
+
+const handleGenerateSubmit = async () => {
+	if (!generateFormRef.value) return;
+	await generateFormRef.value.validate(async valid => {
+		if (valid) {
+			if (latestDataTime.value && generateForm.gen_data_time > latestDataTime.value) {
+				try {
+					await ElMessageBox.confirm(
+						`您选择的数据日期 ${generateForm.gen_data_time} 晚于最新数据日期 ${latestDataTime.value}，是否继续？`,
+						'警告',
+						{
+							confirmButtonText: '继续',
+							cancelButtonText: '取消',
+							type: 'warning'
+						}
+					);
+				} catch {
+					return; // User cancelled
+				}
+			}
+			const loading = ElLoading.service({
+				lock: true,
+				text: '正在生成完成表...',
+				background: 'rgba(0, 0, 0, 0.7)'
+			});
+			try {
+				const response = await axios.post(
+					`${getDynamicPrefix()}/order/finance/finish/generate`,
+					{
+						gen_data_time: generateForm.gen_data_time
+					}
+				);
+				loading.close();
+				if (response.data && response.data.code === 1000) {
+					ElMessage.success('生成完成表成功');
+					generateDialogVisible.value = false;
+					generateFormRef.value?.resetFields();
+					Crud.value?.refresh();
+				} else {
+					ElMessage.error(`生成完成表失败: ${response.data?.message || '响应格式错误'}`);
+				}
+			} catch (error: unknown) {
+				loading.close();
+				let message = '未知错误';
+				if (axios.isAxiosError(error)) {
+					message =
+						error.response?.data?.message || error.message || '网络错误或服务器无响应';
+				}
+				ElMessage.error(`生成完成表失败: ${message}`);
+			}
+		}
+	});
+};
+
+onMounted(() => {
+	fetchLatestDataTime();
+});
+
 const Crud = useCrud(
 	{
 		service: {
@@ -184,4 +327,8 @@ const Crud = useCrud(
 );
 </script>
 
-<style scoped></style>
+<style scoped>
+.el-form-item {
+	margin-bottom: 20px;
+}
+</style>
