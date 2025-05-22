@@ -5,7 +5,7 @@
 			<cl-multi-delete-btn />
 			<el-button type="primary" @click="dialogVisible = true">生成核算表</el-button>
 			<cl-flex1 />
-			<cl-search-key placeholder="搜索子订单编号或商品ID" />
+			<cl-search-key placeholder="搜索子订单编号" />
 		</cl-row>
 
 		<cl-row>
@@ -42,7 +42,7 @@
 
 <script lang="ts" name="finance-accounting" setup>
 import { useCrud, useTable } from '@cool-vue/crud';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { ElMessage, ElLoading } from 'element-plus';
 import axios from 'axios';
 
@@ -186,6 +186,11 @@ useCrud(
 		app.refresh();
 	}
 );
+
+// Trigger the list query when the component is mounted
+onMounted(() => {
+	Crud.value?.refresh();
+});
 </script>
 
 <style scoped></style>
