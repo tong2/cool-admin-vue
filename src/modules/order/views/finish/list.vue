@@ -88,6 +88,8 @@ const Table = useTable({
 		{ label: '街道', prop: 'street', minWidth: 150 },
 		{ label: '详细地址', prop: 'detailed_address', minWidth: 200 },
 		{ label: '订单提交时间', prop: 'order_submission_time', minWidth: 150 },
+		{ label: '旗帜颜色', prop: 'flag_color', minWidth: 120 },
+		{ label: '商家备注', prop: 'merchant_remark', minWidth: 120 },
 		{ label: '支付完成时间', prop: 'payment_completion_time', minWidth: 150 },
 		{ label: 'APP渠道', prop: 'app_channel', minWidth: 120 },
 		{ label: '流量来源', prop: 'traffic_source', minWidth: 120 },
