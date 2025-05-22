@@ -6,7 +6,7 @@
 			<el-button type="primary" @click="handleExport">导出</el-button>
 			<el-button type="success" @click="handleImport">导入</el-button>
 			<cl-flex1 />
-			<cl-search-key placeholder="搜索货品编号或货品名称" />
+			<cl-search-key placeholder="搜索商家编码" />
 		</cl-row>
 
 		<cl-row>
