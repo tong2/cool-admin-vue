@@ -3,6 +3,7 @@
 		<cl-row>
 			<cl-refresh-btn />
 			<cl-multi-delete-btn />
+			<el-button type="primary" @click="handleExport">导出</el-button>
 			<el-button type="primary" @click="dialogVisible = true">生成核算表</el-button>
 			<cl-flex1 />
 			<cl-search-key placeholder="搜索子订单编号" />
@@ -50,6 +51,62 @@ const dialogVisible = ref(false);
 const formData = ref<{ gen_data_time: string }>({
 	gen_data_time: ''
 });
+
+const handleExport = async () => {
+	const loading = ElLoading.service({
+		lock: true,
+		text: '正在导出数据...',
+		background: 'rgba(0, 0, 0, 0.7)'
+	});
+	try {
+		const params = Crud.value?.search?.params || {};
+		const response = await axios.get(`${getDynamicPrefix()}/order/finance/accounting/export`, {
+			params,
+			responseType: 'blob'
+		});
+
+		const url = window.URL.createObjectURL(new Blob([response.data]));
+		const link = document.createElement('a');
+		link.href = url;
+		const contentDisposition = response.headers['content-disposition'];
+		let filename = '日报明细表.xlsx';
+		if (contentDisposition) {
+			const filenameMatch = contentDisposition.match(/filename="?(.+)"?/i);
+			if (filenameMatch && filenameMatch.length > 1) {
+				filename = filenameMatch[1];
+			}
+		}
+		link.setAttribute('download', filename);
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+		window.URL.revokeObjectURL(url);
+
+		ElMessage.success('导出成功');
+		loading.close();
+	} catch (error: unknown) {
+		loading.close();
+		let message = '未知错误';
+		if (axios.isAxiosError(error)) {
+			if (
+				error.response &&
+				error.response.data instanceof Blob &&
+				error.response.data.type.includes('json')
+			) {
+				try {
+					const errorJson = JSON.parse(await error.response.data.text());
+					message = errorJson.message || '导出失败';
+				} catch (parseError) {
+					message = '未知导出错误';
+				}
+			} else {
+				message =
+					error.response?.data?.message || error.message || '网络错误或服务器无响应';
+			}
+		}
+		ElMessage.error(`导出失败: ${message}`);
+	}
+};
 
 const handleGenerate = async () => {
 	if (!formData.value.gen_data_time) {

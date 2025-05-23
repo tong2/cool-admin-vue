@@ -411,7 +411,7 @@ const handleExport = async () => {
 		link.href = url;
 		// Try to get filename from headers, fallback to default
 		const contentDisposition = response.headers['content-disposition'];
-		let filename = 'finance-orders.xlsx';
+		let filename = '订单表.xlsx';
 		if (contentDisposition) {
 			const filenameMatch = contentDisposition.match(/filename="?(.+)"?/i);
 			if (filenameMatch && filenameMatch.length > 1) {

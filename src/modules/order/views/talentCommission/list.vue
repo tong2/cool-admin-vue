@@ -338,7 +338,7 @@ const handleExport = async () => {
 		const link = document.createElement('a');
 		link.href = url;
 		const contentDisposition = response.headers['content-disposition'];
-		let filename = 'finance-talent-commission.xlsx';
+		let filename = '达人佣金表.xlsx';
 		if (contentDisposition) {
 			const filenameMatch = contentDisposition.match(/filename="?(.+)"?/i);
 			if (filenameMatch && filenameMatch.length > 1) {
