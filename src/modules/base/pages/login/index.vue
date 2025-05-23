@@ -8,7 +8,7 @@
 				</div>
 			</div>
 
-			<p class="desc">快速开发后台权限管理系统</p>
+			<p class="desc">电商管理系统</p>
 
 			<div class="form">
 				<el-form label-position="top" class="form" :disabled="saving">

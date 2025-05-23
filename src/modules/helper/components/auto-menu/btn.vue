@@ -1,6 +1,7 @@
 <template>
-	<div class="btn" @click="toCode">
-		<span>AI 极速编码</span>
+	<div class="btn">
+		<!-- <div class="btn" @click="toCode"></div> -->
+		<!-- <span>AI 极速编码</span> -->
 	</div>
 </template>
 
