@@ -47,16 +47,25 @@ const { service } = useCool(); // This seems unused if using direct axios calls 
 // cl-table configuration
 const Table = useTable({
 	columns: [
-		{ type: 'selection', width: 60 },
-		{ label: 'ID', prop: 'id', minWidth: 80 },
-		{ label: '数据时间', prop: 'gen_data_time', minWidth: 120 },
-		{ label: '主订单号', prop: 'main_order_number', minWidth: 150 },
-		{ label: '子订单号', prop: 'sub_order_number', minWidth: 150 },
-		{ label: '选购商品', prop: 'selected_goods', minWidth: 200 },
+		{ type: 'selection', width: 6 },
+		{ label: 'ID', prop: 'id', minWidth: 80, hidden: true },
+		{ label: '主订单号', prop: 'main_order_number', minWidth: 150, fixed: 'left' },
+		{ label: '子订单号', prop: 'sub_order_number', minWidth: 150, fixed: 'left' },
+		{
+			label: '数据时间',
+			prop: 'gen_data_time',
+			minWidth: 120,
+			fixed: 'left',
+			formatter: row =>
+				row.gen_data_time && typeof row.gen_data_time === 'string'
+					? row.gen_data_time.slice(0, 10)
+					: '' // 非空判断，提取 YYYY-MM-DD
+		},
+		{ label: '商家编码', prop: 'merchant_code', minWidth: 120 },
+		{ label: '选购商品', prop: 'selected_goods', minWidth: 200, showOverflowTooltip: true },
 		{ label: '商品规格', prop: 'product_specification', minWidth: 120 },
 		{ label: '商品数量', prop: 'product_quantity', minWidth: 100 },
 		{ label: '商品ID', prop: 'product_id', minWidth: 120 },
-		{ label: '商家编码', prop: 'merchant_code', minWidth: 120 },
 		{ label: '商品单价', prop: 'product_price', minWidth: 100 },
 		{ label: '订单应付金额', prop: 'order_payable_amount', minWidth: 120 },
 		{ label: '运费', prop: 'shipping_fee', minWidth: 100 },

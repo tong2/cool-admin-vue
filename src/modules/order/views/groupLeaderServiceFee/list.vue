@@ -43,10 +43,20 @@ import axios from 'axios';
 const Table = useTable({
 	columns: [
 		{ type: 'selection', width: 60 },
-		{ label: 'ID', prop: 'id', minWidth: 80 },
-		{ label: '订单ID', prop: 'order_id', minWidth: 150 },
+		{ label: 'ID', prop: 'id', minWidth: 80, hidden: true },
+		{ label: '订单ID', prop: 'order_id', minWidth: 150, fixed: 'left' },
+		{ label: '商品ID', prop: 'product_id', minWidth: 120, fixed: 'left' },
+		{
+			label: '数据时间',
+			prop: 'gen_data_time',
+			minWidth: 120,
+			fixed: 'left',
+			formatter: row =>
+				row.gen_data_time && typeof row.gen_data_time === 'string'
+					? row.gen_data_time.slice(0, 10)
+					: '' // 非空判断，提取 YYYY-MM-DD
+		},
 		{ label: '商品名称', prop: 'product_name', minWidth: 150 },
-		{ label: '商品ID', prop: 'product_id', minWidth: 120 },
 		{ label: '订单状态', prop: 'order_status', minWidth: 120 },
 		{ label: '出单机构', prop: 'issuing_agency', minWidth: 120 },
 		{ label: '支付金额', prop: 'payment_amount', minWidth: 120 },

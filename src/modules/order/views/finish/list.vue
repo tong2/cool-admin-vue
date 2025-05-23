@@ -59,10 +59,19 @@ import type { FormInstance, FormRules } from 'element-plus';
 const Table = useTable({
 	columns: [
 		{ type: 'selection', width: 60 },
-		{ label: 'ID', prop: 'id', minWidth: 80 },
-		{ label: '数据时间', prop: 'gen_data_time', minWidth: 170 },
-		{ label: '主订单编号', prop: 'main_order_number', minWidth: 120 },
-		{ label: '子订单编号', prop: 'sub_order_number', minWidth: 120 },
+		{ label: 'ID', prop: 'id', minWidth: 80, hidden: true },
+		{ label: '主订单编号', prop: 'main_order_number', minWidth: 120, fixed: 'left' },
+		{ label: '子订单编号', prop: 'sub_order_number', minWidth: 120, fixed: 'left' },
+		{
+			label: '数据时间',
+			prop: 'gen_data_time',
+			minWidth: 120,
+			fixed: 'left',
+			formatter: row =>
+				row.gen_data_time && typeof row.gen_data_time === 'string'
+					? row.gen_data_time.slice(0, 10)
+					: '' // 非空判断，提取 YYYY-MM-DD
+		},
 		{ label: '选购商品', prop: 'selected_product', minWidth: 150 },
 		{ label: '商品规格', prop: 'product_specification', minWidth: 150 },
 		{ label: '商品数量', prop: 'product_quantity', minWidth: 100 },

@@ -41,9 +41,18 @@ import axios from 'axios';
 const Table = useTable({
 	columns: [
 		{ type: 'selection', width: 60 },
-		{ label: 'ID', prop: 'id', minWidth: 80 },
-		{ label: '数据时间', prop: 'gen_data_time', minWidth: 170 },
-		{ label: '商家编码', prop: 'merchant_code', minWidth: 120 },
+		{ label: 'ID', prop: 'id', minWidth: 80, hidden: true },
+		{ label: '商家编码', prop: 'merchant_code', minWidth: 120, fixed: 'left' },
+		{
+			label: '数据时间',
+			prop: 'gen_data_time',
+			minWidth: 120,
+			fixed: 'left',
+			formatter: row =>
+				row.gen_data_time && typeof row.gen_data_time === 'string'
+					? row.gen_data_time.slice(0, 10)
+					: '' // 非空判断，提取 YYYY-MM-DD
+		},
 		{ label: '货品编号', prop: 'product_number', minWidth: 120 },
 		{ label: '货品名称', prop: 'product_name', minWidth: 150 },
 		{ label: '货品简称', prop: 'product_short_name', minWidth: 120 },

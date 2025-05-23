@@ -89,14 +89,23 @@ const handleGenerate = async () => {
 const Table = useTable({
 	columns: [
 		{ type: 'selection', width: 60 },
-		{ label: 'ID', prop: 'id', minWidth: 80 },
-		{ label: '数据时间', prop: 'gen_data_time', minWidth: 150 },
-		{ label: '子订单编号', prop: 'sub_order_no', minWidth: 120 },
+		{ label: 'ID', prop: 'id', minWidth: 80, hidden: true },
+		{ label: '子订单编号', prop: 'sub_order_no', minWidth: 120, fixed: 'left' },
+		{
+			label: '数据时间',
+			prop: 'gen_data_time',
+			minWidth: 120,
+			fixed: 'left',
+			formatter: row =>
+				row.gen_data_time && typeof row.gen_data_time === 'string'
+					? row.gen_data_time.slice(0, 10)
+					: '' // 非空判断，提取 YYYY-MM-DD
+		},
+		{ label: '商家编码', prop: 'merchant_code', minWidth: 120, fixed: 'left' },
 		{ label: '状态', prop: 'status', minWidth: 100 },
 		{ label: '仓库', prop: 'warehouse', minWidth: 120 },
 		{ label: '交易日期', prop: 'trade_date', minWidth: 150 },
 		{ label: '商品ID', prop: 'product_id', minWidth: 120 },
-		{ label: '商家编码', prop: 'merchant_code', minWidth: 120 },
 		{ label: '订单数量', prop: 'order_quantity', minWidth: 100 },
 		{ label: '订单应付金额', prop: 'order_payable_amount', minWidth: 120 },
 		{ label: '实际平台补贴', prop: 'actual_platform_subsidy', minWidth: 120 },
