@@ -3,7 +3,7 @@
 		<cl-row>
 			<cl-refresh-btn />
 			<cl-multi-delete-btn />
-			<el-button type="primary" @click="openGenerateDialog">生成完成表</el-button>
+			<!-- <el-button type="primary" @click="openGenerateDialog">生成完成表</el-button> -->
 			<cl-flex1 />
 			<cl-search-key placeholder="搜索子订单编号" />
 		</cl-row>
