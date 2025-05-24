@@ -28,7 +28,9 @@
 		>
 			<el-form :model="generateForm" ref="generateFormRef" :rules="generateRules">
 				<el-form-item>
-					<el-text>达人佣金和团长服务费，非必填</el-text>
+					<el-text
+						>达人佣金和团长服务费，非必填。但是需要包含计算的需要导入后再生成
+					</el-text>
 				</el-form-item>
 				<el-form-item>
 					<el-text>已经生成过的数据时间，再次提交会重新更新该天日报明细数据！</el-text>
