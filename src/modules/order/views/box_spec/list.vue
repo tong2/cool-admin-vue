@@ -4,6 +4,7 @@
 			<cl-refresh-btn />
 			<cl-multi-delete-btn />
 			<el-button type="primary" @click="handleExport">导出</el-button>
+			<el-button type="warning" @click="handleExportTemplate">下载模板</el-button>
 			<el-button type="success" @click="handleImport">导入</el-button>
 			<cl-flex1 />
 			<cl-search-key placeholder="搜索货号" />
@@ -51,7 +52,7 @@ const Table = useTable({
 			formatter: row =>
 				row.gen_data_time && typeof row.gen_data_time === 'string'
 					? row.gen_data_time.slice(0, 10)
-					: '' // 非空判断，提取 YYYY-MM-DD
+					: ''
 		},
 		{ label: '仓库', prop: 'warehouse', minWidth: 120 },
 		{ label: '品牌', prop: 'brand', minWidth: 120 },
@@ -104,14 +105,16 @@ const fetchBoxSpecList = async (params: any) => {
 	}
 };
 
-const handleExport = async () => {
+const performExport = async (isTemplate: boolean) => {
 	const loading = ElLoading.service({
 		lock: true,
-		text: '正在导出数据...',
+		text: isTemplate ? '正在生成模板...' : '正在导出数据...',
 		background: 'rgba(0, 0, 0, 0.7)'
 	});
 	try {
-		const params = Crud.value?.search?.params || {};
+		const params = isTemplate
+			? { keyWord: 'downloadtemplate' }
+			: Crud.value?.search?.params || {};
 		const response = await axios.get(`${getDynamicPrefix()}/order/finance/box_spec/export`, {
 			params,
 			responseType: 'blob'
@@ -121,7 +124,7 @@ const handleExport = async () => {
 		const link = document.createElement('a');
 		link.href = url;
 		const contentDisposition = response.headers['content-disposition'];
-		let filename = '箱规表.xlsx';
+		let filename = isTemplate ? '箱规表模板.xlsx' : '箱规表.xlsx';
 		if (contentDisposition) {
 			const filenameMatch = contentDisposition.match(/filename="?(.+)"?/i);
 			if (filenameMatch && filenameMatch.length > 1) {
@@ -134,7 +137,7 @@ const handleExport = async () => {
 		document.body.removeChild(link);
 		window.URL.revokeObjectURL(url);
 
-		ElMessage.success('导出成功');
+		ElMessage.success(isTemplate ? '模板下载成功' : '导出成功');
 		loading.close();
 	} catch (error: unknown) {
 		loading.close();
@@ -147,17 +150,25 @@ const handleExport = async () => {
 			) {
 				try {
 					const errorJson = JSON.parse(await error.response.data.text());
-					message = errorJson.message || '导出失败';
+					message = errorJson.message || (isTemplate ? '模板下载失败' : '导出失败');
 				} catch (parseError) {
-					message = '未知导出错误';
+					message = isTemplate ? '未知模板下载错误' : '未知导出错误';
 				}
 			} else {
 				message =
 					error.response?.data?.message || error.message || '网络错误或服务器无响应';
 			}
 		}
-		ElMessage.error(`导出失败: ${message}`);
+		ElMessage.error(`${isTemplate ? '模板下载失败' : '导出失败'}: ${message}`);
 	}
+};
+
+const handleExport = (_event: any) => {
+	performExport(false);
+};
+
+const handleExportTemplate = (_event: any) => {
+	performExport(true);
 };
 
 const handleImport = () => {
