@@ -53,25 +53,25 @@ const Table = useTable({
 					? row.gen_data_time.slice(0, 10)
 					: '' // 非空判断，提取 YYYY-MM-DD
 		},
-		{ label: '0-0.5KG (含打包辅材)', prop: 'weight_0_0_5kg_with_pack', minWidth: 150 },
+		{ label: '0-0.5KG (含打包辅材)', prop: 'weight_0_0_5kg_with_pack', minWidth: 170 },
 		{
 			label: '0.51-1KG (机打含打包辅材)',
 			prop: 'weight_0_51_1kg_machine_with_pack',
-			minWidth: 180
+			minWidth: 200
 		},
-		{ label: '1.01-2KG (贴单件)', prop: 'weight_1_01_2kg_label', minWidth: 150 },
+		{ label: '1.01-2KG (贴单件)', prop: 'weight_1_01_2kg_label', minWidth: 180 },
 		{ label: '1.01-2KG (打包品)', prop: 'weight_1_01_2kg_pack', minWidth: 150 },
-		{ label: '2.01-3KG (贴单件)', prop: 'weight_2_01_3kg_label', minWidth: 150 },
-		{ label: '2.01-3KG (打包品)', prop: 'weight_2_01_3kg_pack', minWidth: 150 },
+		{ label: '2.01-3KG (贴单件)', prop: 'weight_2_01_3kg_label', minWidth: 190 },
+		{ label: '2.01-3KG (打包品)', prop: 'weight_2_01_3kg_pack', minWidth: 200 },
 		{
 			label: '10公斤内首重3公斤 (含辅材和操作费)',
 			prop: 'ten_kg_with_fee_first_3kg',
-			minWidth: 200
+			minWidth: 180
 		},
 		{
 			label: '10公斤内续重每公斤 (3kg以上不含辅材和操作费)',
 			prop: 'ten_kg_no_fee_additional_per_kg',
-			minWidth: 250
+			minWidth: 190
 		},
 		{ label: '操作', type: 'op', buttons: ['delete'], minWidth: 120 }
 	]
